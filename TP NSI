@@ -28,7 +28,7 @@ def crypto_lettre(dico: dict, lettre: str) -> str:
     """
     return dico[lettre]
 
-crypto_texte(dico: dict, texte: str) -> str:
+def crypto_texte(dico, texte):
     """
     Fonction qui renvoie un texte crypté à partir du texte entré et
     du dictionnaire associé
@@ -45,7 +45,7 @@ crypto_texte(dico: dict, texte: str) -> str:
             lettre+=crypto_lettre(dico, texte[i])     
     return lettre
 
-print(crypto_texte(dico_alea(), 'SALUT FRERE CA DIT QUOI'))
+print(crypto_texte(dico_alea(), 'BIEN LE BONJOUR'))
 
 def lire_fichier(fichier: str) -> list:
     """
@@ -53,7 +53,12 @@ def lire_fichier(fichier: str) -> list:
     :param fichier:
     :return: liste contenant le texte
     """
+    fich=open(fichier, "r")
+    texte=fich.readline()
+    print(texte)
+    fich.close()
     
+print(lire_fichier("un fichier de bg.py"))
 
 def occurrence(texte: str) -> dict:
     """
@@ -63,7 +68,11 @@ def occurrence(texte: str) -> dict:
     :param texte: le texte crypté en MAJUSCULES
     :return: un dictionnaire
     """
-    pass
+    dico_occurence = {}
+    for a in range (0,26):
+        for i in range (len(texte)):
+            
+            dico_occurence[chr(65+a)]=
 
 def maxi(dico: dict) -> str:
     """
