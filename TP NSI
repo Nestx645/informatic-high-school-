@@ -7,16 +7,12 @@ def dico_alea() -> dict:
     une lettre MAJUSCULE prise aléatoirement
     :return: un dictionnaire ex : {'A': 'D', 'B': 'Y'....}
     """
-    l= []
+    lettre = [chr(i) for i in range(65, 91)]
+    random.shuffle(lettre)
+    dic = {}
     for i in range(65, 91):
-        l.append(chr(i))
-        
-    random.shuffle(l)
-    d={}
-    for a in range (0,26):
-        d[chr(65+a)]=l[a]
-    return d
-
+        dic[chr(i)] = lettre[i-65]
+    return dic
        
 
 def crypto_lettre(dico: dict, lettre: str) -> str:
@@ -37,15 +33,14 @@ def crypto_texte(dico, texte):
     :param texte: texte en MAJUSCULES
     :return: le texte crypté en MAJUSCULES
     """
-    lettre=""
-    for i in range(len(texte)):
-        if texte[i]==" ":
-            lettre+=" "
+    t = ""
+    for lettre in texte:
+        if lettre == ' ':
+            t += ' '
         else:
-            lettre+=crypto_lettre(dico, texte[i])     
-    return lettre
+            t += crypto_lettre(dico, lettre)
+    return t 
 
-print(crypto_texte(dico_alea(), 'BIEN LE BONJOUR'))
 
 def lire_fichier(fichier: str) -> list:
     """
@@ -53,12 +48,10 @@ def lire_fichier(fichier: str) -> list:
     :param fichier:
     :return: liste contenant le texte
     """
-    fich=open(fichier, "r")
-    texte=fich.readline()
-    print(texte)
-    fich.close()
+    with open(fichier, 'r') as f:
+        t = f.read()
+    return t
     
-print(lire_fichier("un fichier de bg.py"))
 
 def occurrence(texte: str) -> dict:
     """
@@ -68,11 +61,13 @@ def occurrence(texte: str) -> dict:
     :param texte: le texte crypté en MAJUSCULES
     :return: un dictionnaire
     """
-    dico_occurence = {'A':0, 'B':0, 'C':0, 'D':0, 'E':0, 'F':0, 'G':0, 'H':0, 'I':0, 'J':0, 'K':0, 'L':0, 'M':0, 'N':0, 'O':0, 'P':0, 'Q':0, 'R':0, 'S':0, 'T':0,'U':0, 'V':0, 'W':0, 'X':0,'Y':0, 'Z':0 }
-    for a in range (65, 91):
-        for i in range (len(texte)):
-            if texte[a]==chr(i)
-            dico_occurence[chr(i)]+=1
+    dic = {}
+    for i in range(65, 91):
+        dic[chr(i)] = 0
+    for lettre in texte:
+        if lettre != " ":
+            dic[lettre] += 1
+    return dic
 
 def maxi(dico: dict) -> str:
     """
@@ -81,7 +76,13 @@ def maxi(dico: dict) -> str:
     :param dico: dictionnaire des occurences
     :return: la lettre ayant la plus grande occurence
     """
-    pass
+    m=-1
+    lettre=""
+    for cle, val, in dico.items():
+        if val > m:
+            m=val
+            lettre = cle
+    return lettre
 
 def propose(texte: str) -> dict:
     """
@@ -91,7 +92,16 @@ def propose(texte: str) -> dict:
     :param texte:
     :return: le dictionnaire de décodage
     """
-    pass
+    dic_freq = ['E', 'A', 'S', 'I', 'N', 'T', 'R', 'L', 'U', 'O', 'D', 'C', 'P', 'M', 'V', 'G', 'F', 'B', 'Q', 'H', 'X', 'J', 'Y', 'Z', 'K', 'W']
+    occ = occurrence(texte)
+    dic={}
+    for i in range(26):
+        lettre_franc = dic_freq[i]
+        lettre_text = maxi(occ)
+        occ[lettre_text] = -1
+        dic[lettre_text] = lettre_franc
+        
+    return dic
 
 def permute(dico: dict,l1: str,l2: str) -> dict:
     """
@@ -101,9 +111,20 @@ def permute(dico: dict,l1: str,l2: str) -> dict:
     :param l2: lettre en MAJUSCULE
     :return: le nouveau dictionnaire
     """
-    pass
+    a = ""
+    b = ""
+    for cle, val in dico.items():
+        if val == l1:
+            a = cle
+        if val == l2:
+            b = cle
+    dico[a] = l2
+    dico[b] = l1
+    return dico
+        
+    
 
-"""#programme principal
+#programme principal
 table = lire_fichier("texte.txt")
 d = propose(table)
 print(d)
@@ -113,5 +134,6 @@ permute(d,"H","B")
 permute(d,"H","G")
 permute(d,"L","U")
 permute(d,"Q","H")
+
 print()
-print(crypto_texte(d, table))"""
+print(crypto_texte(d, table))
